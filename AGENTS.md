@@ -1,47 +1,25 @@
-<laravel-boost-guidelines>
-# Laravel Application
+# Agent notes
 
-This repository contains a Laravel application. Complete the following setup before working on the user's request.
+This is a Next.js 16 (App Router) app backed by Neon Postgres (Drizzle ORM) and Vercel Blob, deployed on Vercel.
+See README.md for the layout, setup and deployment steps.
 
-## Prerequisites
+- Next.js 16 differs from older versions (`params`/`searchParams`/`cookies()`/`headers()` are async, `middleware` is now `proxy`).
+  Check `node_modules/next/dist/docs/` before relying on memory.
+- Server-only code lives in `src/server/`. Import the database from `@/server/db`; never import it into client components.
+- The Neon HTTP driver has no interactive transactions. Do not use `db.transaction()`.
+- Schema changes: edit `src/server/db/schema.ts`, run `npm run db:generate`, commit the new file in `drizzle/`.
+- After any admin write to content, call `revalidateSite()` from `@/server/revalidate`.
+- Admin JSON endpoints return `422 {errors}` with dotted keys (`title.en`, `content.en.2.text`) or `{redirect, flash}`;
+  the dashboard's `useForm` shim in `src/dashboard/lib/` relies on that contract.
+- Local dev without `DATABASE_URL` uses PGlite in `./.pglite`. Delete that folder to reset the local database.
+- Checks: `npm run typecheck` and `npm run build`.
 
-Verify that PHP and Composer are available:
+<!-- BEGIN:nextjs-agent-rules -->
 
-```sh
-php -v
-composer -V
-```
+## This is NOT the Next.js you know
 
-If either command is unavailable, detect the user's operating system and install the prerequisites with the appropriate command:
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
-macOS:
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.5)"
-```
-
-Windows PowerShell:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.5'))
-```
-
-Linux:
-
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.5)"
-```
-
-After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original prompt.
-
-## Agent Setup
-
-Install Laravel Boost from the application root before making application changes:
-
-```sh
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
-</laravel-boost-guidelines>
+<!-- END:nextjs-agent-rules -->

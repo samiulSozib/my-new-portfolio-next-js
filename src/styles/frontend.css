@@ -1,0 +1,312 @@
+@import "tailwindcss";
+@source "../frontend";
+@source "../app";
+
+/* Font stacks. The Google Fonts stylesheet is linked from app/(site)/[lang]/layout.tsx. */
+:root {
+  --font-geist-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, monospace;
+  --font-bengali: "Noto Sans Bengali", sans-serif;
+}
+
+/* Dark styles apply when <html> has the "dark" class (set by the theme toggle). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Semantic colour tokens. Components use names like text-muted or bg-surface,
+ * so the palette can change here without touching the markup.
+ * The accent is violet, with cyan as the second gradient stop ("AI" colours).
+ * --net-a / --net-b are the same two colours as RGB triplets for the canvas animation.
+ */
+:root {
+  --background: oklch(0.99 0.004 285);
+  --surface: oklch(0.97 0.008 285);
+  --surface-strong: oklch(0.935 0.012 285);
+  --foreground: oklch(0.2 0.03 280);
+  --muted: oklch(0.48 0.025 280);
+  --border: oklch(0.91 0.012 285);
+  --border-strong: oklch(0.84 0.018 285);
+  --accent: oklch(0.53 0.22 290);
+  --accent-2: oklch(0.6 0.13 215);
+  --accent-hover: oklch(0.47 0.22 290);
+  --accent-foreground: oklch(0.99 0 0);
+  --accent-soft: oklch(0.95 0.03 290);
+  --accent-text: oklch(0.48 0.2 290);
+  --success: oklch(0.52 0.13 160);
+  --success-soft: oklch(0.95 0.04 160);
+  --danger: oklch(0.55 0.18 25);
+  --warning: oklch(0.6 0.14 75);
+  --glow: oklch(0.6 0.2 290 / 0.18);
+  --net-a: 124 58 237;
+  --net-b: 8 145 178;
+  --grid-line: oklch(0.5 0.05 285 / 0.08);
+}
+
+.dark {
+  --background: oklch(0.145 0.02 280);
+  --surface: oklch(0.185 0.025 280);
+  --surface-strong: oklch(0.235 0.03 280);
+  --foreground: oklch(0.96 0.008 285);
+  --muted: oklch(0.72 0.02 280);
+  --border: oklch(0.27 0.03 280);
+  --border-strong: oklch(0.35 0.035 280);
+  --accent: oklch(0.7 0.17 292);
+  --accent-2: oklch(0.8 0.12 210);
+  --accent-hover: oklch(0.76 0.16 292);
+  --accent-foreground: oklch(0.16 0.02 280);
+  --accent-soft: oklch(0.26 0.06 290);
+  --accent-text: oklch(0.8 0.12 292);
+  --success: oklch(0.78 0.13 160);
+  --success-soft: oklch(0.28 0.05 160);
+  --danger: oklch(0.72 0.16 25);
+  --warning: oklch(0.8 0.12 75);
+  --glow: oklch(0.65 0.2 292 / 0.22);
+  --net-a: 167 139 250;
+  --net-b: 103 232 249;
+  --grid-line: oklch(0.8 0.05 285 / 0.06);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-geist-sans), var(--font-bengali), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: oklch(0.6 0.2 290 / 0.25);
+}
+
+/* ---------- Backgrounds ---------- */
+
+/* Faint grid that fades out towards the edges, used behind heroes. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 85%);
+}
+
+/* Slow-moving violet and cyan light, like an aurora. */
+.aurora {
+  background:
+    radial-gradient(40% 50% at 15% 20%, oklch(0.62 0.2 290 / 0.22), transparent 70%),
+    radial-gradient(35% 45% at 85% 15%, oklch(0.72 0.13 210 / 0.2), transparent 70%),
+    radial-gradient(45% 40% at 60% 90%, oklch(0.6 0.18 320 / 0.12), transparent 70%);
+  filter: blur(10px);
+  animation: aurora 18s ease-in-out infinite alternate;
+}
+
+.page-glow {
+  background:
+    radial-gradient(50% 60% at 80% 0%, var(--glow), transparent 70%),
+    radial-gradient(40% 50% at 0% 10%, oklch(0.72 0.13 210 / 0.1), transparent 70%);
+}
+
+/* ---------- Gradients ---------- */
+
+.bg-gradient-accent {
+  background-image: linear-gradient(120deg, var(--accent), var(--accent-2), var(--accent));
+  background-size: 220% 220%;
+  animation: gradient-shift 10s ease infinite;
+}
+
+.text-gradient {
+  background-image: linear-gradient(100deg, var(--accent-text), var(--accent-2), var(--accent-text));
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 12s ease infinite;
+}
+
+/* A card whose border lights up with the accent gradient on hover. */
+.glow-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent), transparent 40%, transparent 60%, var(--accent-2));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.glow-card:hover::before,
+.glow-card:focus-within::before {
+  opacity: 1;
+}
+
+/* Rotating gradient ring around the profile photo. */
+.avatar-ring {
+  background: conic-gradient(from var(--ring-angle, 0deg), var(--accent), var(--accent-2), oklch(0.65 0.2 330), var(--accent));
+  animation: ring-spin 6s linear infinite;
+}
+
+@property --ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ---------- Terminal card ---------- */
+
+/* Each line is revealed left to right, one after another, like it is being typed. */
+.term-line {
+  clip-path: inset(0 100% 0 0);
+  animation: type-in var(--type-duration, 0.9s) steps(var(--type-steps, 28), end) forwards;
+  animation-delay: var(--type-delay, 0s);
+}
+
+.term-cursor {
+  animation: caret 1s steps(1) infinite;
+}
+
+/* ---------- Scroll reveal ---------- */
+
+/* PageShell adds "reveal-ready" to <html> after hydration and marks elements visible as they scroll in.
+   Without JavaScript nothing is hidden. */
+.reveal {
+  transition:
+    opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-ready .reveal:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* ---------- Cover scenes ---------- */
+
+.cover-neural { background: radial-gradient(120% 90% at 70% 20%, #4c1d95 0%, #1e1b4b 55%, #0b0a1f 100%); }
+.cover-circuit { background: linear-gradient(150deg, #0e7490 0%, #164e63 45%, #0a1f2e 100%); }
+.cover-code { background: linear-gradient(150deg, #5b21b6 0%, #312e81 55%, #111133 100%); }
+.cover-data { background: linear-gradient(160deg, #0f766e 0%, #1e3a5f 55%, #0d1530 100%); }
+.cover-terminal { background: linear-gradient(170deg, #1f2937 0%, #111827 60%, #050816 100%); }
+.cover-orbit { background: radial-gradient(100% 100% at 50% 50%, #6d28d9 0%, #312e81 45%, #0a0a23 100%); }
+
+.anim-float { animation: cover-float 6s ease-in-out infinite; }
+.anim-glow { animation: cover-glow 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.anim-scan { animation: cover-scan 4s linear infinite; }
+.anim-sheen { animation: cover-sheen 6s ease-in-out infinite; }
+.anim-flow { animation: dash-flow 2.4s linear infinite; }
+.anim-flow-slow { animation: dash-flow 5s linear infinite; }
+.anim-blink { animation: caret 1s steps(1) infinite; }
+.anim-grow { animation: bar-grow 3.2s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: bottom; }
+.anim-spin { animation: spin 14s linear infinite; transform-box: view-box; transform-origin: 400px 225px; }
+.anim-spin-reverse { animation: spin 22s linear infinite reverse; transform-box: view-box; transform-origin: 400px 225px; }
+.anim-rise { animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-pulse-ring { animation: pulse-ring 2s cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
+.anim-marquee { animation: marquee 40s linear infinite; }
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes aurora {
+  0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+  100% { transform: translate3d(2%, 2%, 0) scale(1.08); }
+}
+@keyframes ring-spin {
+  to { --ring-angle: 360deg; }
+}
+@keyframes type-in {
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes caret {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+@keyframes cover-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes cover-glow {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+@keyframes cover-scan {
+  from { transform: translateY(-40px); }
+  to { transform: translateY(480px); }
+}
+@keyframes cover-sheen {
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.3; }
+}
+@keyframes dash-flow {
+  to { stroke-dashoffset: -40; }
+}
+@keyframes bar-grow {
+  from { transform: scaleY(0.55); }
+  to { transform: scaleY(1); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 oklch(0.65 0.15 160 / 0.6); }
+  100% { box-shadow: 0 0 0 10px oklch(0.65 0.15 160 / 0); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Fades the ends of the technology marquee. */
+.mask-fade-x {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-ready .reveal:not(.is-visible) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+html:lang(bn) { line-height: 1.75; }
